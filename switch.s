@@ -1,36 +1,39 @@
 # switch.S
 .global switch_to
+# void switch_to(struct trapframe* old, struct trapframe* new);
 switch_to:
-    # 引数: old (eax), new (edx)
+    # 引数:
+    #   [esp+4] = old
+    #   [esp+8] = new
 
-    # old->tf にレジスタを保存
-    mov 4(%esp), %eax   # old
-    mov 8(%esp), %edx   # new
+    # 今は old は使わない（常に 0 を渡している前提）
+    # new のポインタを esi に保持しておく
+    mov 8(%esp), %esi        # esi = new (struct trapframe*)
 
-    # old が NULL の場合は保存しない
-    test %eax, %eax
-    jz 1f
+    # ---- new->汎用レジスタをロード ----
+    # struct trapframe {
+    #   0:  edi
+    #   4:  esi
+    #   8:  ebp
+    #   12: esp_dummy
+    #   16: ebx
+    #   20: edx
+    #   24: ecx
+    #   28: eax
+    #   32: eip
+    #   ...
+    # }
 
-    # old->tf->edi = edi など
-    mov %edi, 0(%eax)
-    mov %esi, 4(%eax)
-    mov %ebp, 8(%eax)
-    mov %ebx, 16(%eax)
-    mov %edx, 20(%eax)
-    mov %ecx, 24(%eax)
-    mov %eax, 28(%eax)
-1:
+    mov 0(%esi), %edi        # edi
+    mov 4(%esi), %edx        # esi フィールドはとりあえず edx に入れる（任意）
+    mov 8(%esi), %ebp        # ebp
+    mov 16(%esi), %ebx       # ebx
+    mov 20(%esi), %edx       # edx
+    mov 24(%esi), %ecx       # ecx
+    mov 28(%esi), %eax       # eax
 
-    # new->tf をロード
-    mov 8(%esp), %edx
-    mov 0(%edx), %edi
-    mov 4(%edx), %esi
-    mov 8(%edx), %ebp
-    mov 16(%edx), %ebx
-    mov 20(%edx), %edx
-    mov 24(%edx), %ecx
-    mov 28(%edx), %eax
+    # ---- スタックポインタをタスク用に切り替え ----
+    mov 12(%esi), %esp       # esp = esp_dummy
 
-    # EIP, CS, EFLAGS は iret で戻す
-    add $32, %esp
-    iret
+    # ---- EIP にジャンプ（CS/eflags はカーネルのままでOK）----
+    jmp *32(%esi)            # jmp new->eip

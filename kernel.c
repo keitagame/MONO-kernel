@@ -50,6 +50,15 @@ void timer_handler()
     }
 }
 
+/*void timer_handler(void)
+{
+    static int ticks = 0;
+    ticks++;
+    if (ticks % 100 == 0) {
+        serial_write_string("tick\n");
+    }
+    // ★ ここでは scheduler_next() や switch_to() を呼ばない
+}*/
 void kernel_main(uint32_t multiboot_magic, uint32_t multiboot_info)
 {
     struct multiboot_info* mb = (struct multiboot_info*)multiboot_info;
