@@ -5,7 +5,7 @@ LD = ld
 CFLAGS = -m32 -ffreestanding -O2 -Wall -Wextra -nostdlib -fno-stack-protector -fno-pic
 LDFLAGS = -T linker.ld -nostdlib -m elf_i386
 
-OBJS = boot.o gdt.o gdt_flush.o idt.o serial.o kernel.o
+OBJS = boot.o gdt.o gdt_flush.o idt.o serial.o kernel.o pmm.o
 
 all: kernel.elf iso
 
