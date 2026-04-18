@@ -28,7 +28,7 @@ iso: kernel.elf grub.cfg
 	grub-mkrescue -o minimal.iso iso
 
 run: all
-	qemu-system-i386 -cdrom minimal.iso -nographic
+	qemu-system-i386 -cdrom minimal.iso -nographic -d int,cpu_reset -no-reboot -D qemu.log
 
 clean:
 	rm -rf *.o kernel.elf iso minimal.iso

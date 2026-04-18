@@ -4,6 +4,8 @@
 static struct idt_entry idt[256];
 static struct idt_ptr   idtp;
 
+
+
 static inline void lidt(void* base, uint16_t size)
 {
     struct {
