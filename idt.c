@@ -4,7 +4,7 @@
 static struct idt_entry idt[256];
 static struct idt_ptr   idtp;
 
-
+extern void irq0_handler();
 
 static inline void lidt(void* base, uint16_t size)
 {
@@ -16,6 +16,14 @@ static inline void lidt(void* base, uint16_t size)
     __asm__ volatile ("lidt %0" : : "m"(idtr));
 }
 
+void idt_set_gate(int n, uint32_t handler, uint16_t sel, uint8_t flags) {
+    idt[n].base_low  = handler & 0xFFFF;
+    idt[n].base_high = (handler >> 16) & 0xFFFF;
+
+    idt[n].sel       = sel;     // 例: 0x08 (カーネルコードセグメント)
+    idt[n].always0   = 0;
+    idt[n].flags     = flags;   // 例: 0x8E (present, ring0, 32bit interrupt gate)
+}
 void idt_init(void)
 {
     for (int i = 0; i < 256; i++) {
@@ -28,6 +36,6 @@ void idt_init(void)
 
     idtp.limit = sizeof(idt) - 1;
     idtp.base  = (uint32_t)&idt;
-
+    idt_set_gate(32, (uint32_t)irq0_handler, 0x08, 0x8E);
     lidt(idt, sizeof(idt));
 }

@@ -1,3 +1,14 @@
+.global irq0_handler
+irq0_handler:
+    pusha
+    call timer_handler   # C のスケジューラ呼び出し
+    popa
+
+    # PIC へ EOI
+    mov $0x20, %al
+    out %al, $0x20
+
+    iret
 
 .global gdt_flush
 gdt_flush:
