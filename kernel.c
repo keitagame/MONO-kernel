@@ -17,6 +17,7 @@ void kernel_main(uint32_t multiboot_magic, uint32_t multiboot_info)
     (void)multiboot_magic;
     (void)multiboot_info;
     pic_disable();
+    
     gdt_init();
     idt_init();
     serial_init();
