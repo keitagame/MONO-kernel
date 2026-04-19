@@ -72,7 +72,14 @@ void kernel_main(uint32_t multiboot_magic, uint32_t multiboot_info)
     (void)multiboot_magic;
     (void)multiboot_info;
     //pic_disable();
-    
+    multiboot_module_t* mod = (multiboot_module_t*) mb->mods_addr;
+
+    uint8_t* initrd_start = (uint8_t*) mod->mod_start;
+    uint8_t* initrd_end   = (uint8_t*) mod->mod_end;
+    uint32_t initrd_size  = initrd_end - initrd_start;
+
+    serial_write_string("initrd loaded.\n");
+
     gdt_init();
     idt_init();
     serial_init();
