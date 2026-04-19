@@ -14,7 +14,10 @@ static inline void exit(int code) {
 }
 
 void user_main() {
-    const char msg[] = "Hello from user mode!\n";
-    write(1, msg, sizeof(msg)-1);
-    exit(0);
+    while (1) {
+        // 何もしない or 適当にループ
+    }
+    //const char msg[] = "Hello from user mode!\n";
+    //write(1, msg, sizeof(msg)-1);
+    //exit(0);
 }

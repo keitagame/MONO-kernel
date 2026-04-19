@@ -26,7 +26,8 @@ void tss_set_kernel_stack(uint32_t stack) {
 void tss_init() {
     tss.ss0 = 0x10; // kernel data
     tss.esp0 = 0;
-
-    gdt_set_tss(&tss);
+    uint32_t base  = (uint32_t)&tss;
+    uint32_t limit = sizeof(tss);
+    gdt_set_tss(5, base, limit);
     asm volatile("ltr %%ax" :: "a"(0x28)); // TSS selector
 }

@@ -83,14 +83,15 @@ void kernel_main(uint32_t multiboot_magic, uint32_t multiboot_info)
     void* page = pmm_alloc_page();
     serial_write_string("Allocated page at: ");
     
-    timer_init(100); // 100Hz
-    asm volatile("sti");
-    process_create(task1);
+    //timer_init(100); // 100Hz
+    //asm volatile("sti");
+    //process_create(task1);
     //process_create(task2);
+    serial_write_string("Kernel OK\n");
     uint32_t user_stack = 0x800000; // 適当な空き領域
     enter_user_mode((uint32_t)user_main, user_stack);
-    current = scheduler_next();
-    switch_to(0, current->tf);
+    //current = scheduler_next();
+    //switch_to(0, current->tf);
     while (1) {
         __asm__ volatile ("hlt");
     }
