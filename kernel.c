@@ -108,16 +108,23 @@ void kernel_main(uint32_t multiboot_magic, uint32_t multiboot_info)
     (void)multiboot_magic;
     (void)multiboot_info;
     //pic_disable();
-    if (!(mb->flags & (1 << 3))) {
-    serial_write_string("no modules flag in multiboot info\n");
-} else if (mb->mods_count == 0) {
-    serial_write_string("mods_count == 0 (no initrd)\n");
-}else{
+   
     multiboot_module_t* mod = (multiboot_module_t*) mb->mods_addr;
 
     uint8_t* initrd_start = (uint8_t*) mod->mod_start;
     uint8_t* initrd_end   = (uint8_t*) mod->mod_end;
     uint32_t initrd_size  = initrd_end - initrd_start;
+serial_write_string("mb->flags = 0x");
+serial_write_hex(mb->flags);
+serial_write_string("\n");
+
+serial_write_string("mb->mods_count = ");
+serial_write_dec(mb->mods_count);
+serial_write_string("\n");
+
+serial_write_string("mb->mods_addr  = 0x");
+serial_write_hex(mb->mods_addr);
+serial_write_string("\n");
 
     serial_write_string("initrd loaded.\n");
 
@@ -163,5 +170,5 @@ serial_write_string(" bytes\n");
     while (1) {
         __asm__ volatile ("hlt");
     }
-}
+
 }
