@@ -36,7 +36,7 @@ void task1() {
 
 void task2() {
     while (1) {
-        serial_write_string("B");
+        serial_write_string("C");
         for (volatile int i = 0; i < 1000000; i++);
     }
 }
