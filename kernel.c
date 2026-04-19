@@ -29,18 +29,13 @@ process_t* scheduler_next()
 }
 void task1() {
     while (1) {
-        serial_write_string("A");
+        //serial_write_string("");
         for (volatile int i = 0; i < 1000000; i++);
     }
 }
 
-void task2() {
-    while (1) {
-        serial_write_string("C");
-        for (volatile int i = 0; i < 1000000; i++);
-    }
-}
-void timer_handler()
+
+/*void timer_handler()
 {
     process_t* next = scheduler_next();
     if (next != current) {
@@ -48,6 +43,10 @@ void timer_handler()
         current = next;
         switch_to(old->tf, next->tf);
     }
+}*/
+void timer_handler()
+{
+    // 何もしない
 }
 
 /*void timer_handler(void)
@@ -81,7 +80,7 @@ void kernel_main(uint32_t multiboot_magic, uint32_t multiboot_info)
     timer_init(100); // 100Hz
     asm volatile("sti");
     process_create(task1);
-    process_create(task2);
+    //process_create(task2);
 
     current = scheduler_next();
     switch_to(0, current->tf);
