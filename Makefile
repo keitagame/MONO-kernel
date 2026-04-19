@@ -5,7 +5,7 @@ LD = ld
 CFLAGS = -m32 -ffreestanding -O2 -Wall -Wextra -nostdlib -fno-stack-protector -fno-pic
 LDFLAGS = -T linker.ld -nostdlib -m elf_i386
 
-OBJS = boot.o gdt.o gdt_flush.o idt.o serial.o kernel.o pmm.o process.o switch.o timer.o sys.o userprog.o usermode.o syscall.o tss.o isr_syscall_stub.o
+OBJS = boot.o gdt.o gdt_flush.o idt.o serial.o kernel.o pmm.o process.o switch.o timer.o sys.o userprog.o usermode.o syscall.o tss.o isr_syscall_stub.o initrd.o string.o
 
 all: kernel.elf iso
 
@@ -28,6 +28,7 @@ kernel.elf: $(OBJS)
 iso: kernel.elf grub.cfg
 	mkdir -p iso/boot/grub
 	cp kernel.elf iso/boot/
+	cp initrd.cpio iso/boot/
 	cp grub.cfg iso/boot/grub/
 	grub-mkrescue -o minimal.iso iso
 

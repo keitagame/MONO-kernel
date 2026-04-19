@@ -1,0 +1,25 @@
+#include "string.h"
+
+void* memcpy(void* dst, const void* src, uint32_t n) {
+    uint8_t* d = dst;
+    const uint8_t* s = src;
+    while (n--) *d++ = *s++;
+    return dst;
+}
+
+int memcmp(const void* s1, const void* s2, uint32_t n) {
+    const uint8_t* a = s1;
+    const uint8_t* b = s2;
+    while (n--) {
+        if (*a != *b) return *a - *b;
+        a++; b++;
+    }
+    return 0;
+}
+
+int strcmp(const char* s1, const char* s2) {
+    while (*s1 && (*s1 == *s2)) {
+        s1++; s2++;
+    }
+    return *(unsigned char*)s1 - *(unsigned char*)s2;
+}
