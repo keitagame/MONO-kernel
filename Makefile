@@ -5,13 +5,14 @@ LD = ld
 CFLAGS = -m32 -ffreestanding -O2 -Wall -Wextra -nostdlib -fno-stack-protector -fno-pic
 LDFLAGS = -T linker.ld -nostdlib -m elf_i386
 
-OBJS = boot.o gdt.o gdt_flush.o idt.o serial.o kernel.o pmm.o process.o switch.o timer.o
+OBJS = boot.o gdt.o gdt_flush.o idt.o serial.o kernel.o pmm.o process.o switch.o timer.o sys.o userprog.o usermode.o syscall.o tss.o isr_syscall_stub.o
 
 all: kernel.elf iso
 
 boot.o: boot.s
 	$(AS) --32 -o $@ $<
-
+isr_syscall_stub.o: isr_syscall_stub.s
+	$(AS) --32 -o $@ $<
 gdt_flush.o: gdt_flush.s
 	$(AS) --32 -o $@ $<
 

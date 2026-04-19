@@ -7,6 +7,8 @@
 #include "process.h"
 #include "pmm.h"
 #include "timer.h"
+
+#include "sys.h"
 static inline void outb(uint16_t port, uint8_t val)
 {
     __asm__ volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
@@ -28,8 +30,11 @@ process_t* scheduler_next()
     return current; // 他にいなければ同じ
 }
 void task1() {
+    const char msg[] = "hello from task1\n";
     while (1) {
+        
         //serial_write_string("");
+        sys_write(1, msg, sizeof(msg) - 1);
         for (volatile int i = 0; i < 1000000; i++);
     }
 }
@@ -58,6 +63,7 @@ void timer_handler()
     }
     // ★ ここでは scheduler_next() や switch_to() を呼ばない
 }*/
+extern void user_main();
 void kernel_main(uint32_t multiboot_magic, uint32_t multiboot_info)
 {
     struct multiboot_info* mb = (struct multiboot_info*)multiboot_info;
@@ -81,7 +87,8 @@ void kernel_main(uint32_t multiboot_magic, uint32_t multiboot_info)
     asm volatile("sti");
     process_create(task1);
     //process_create(task2);
-
+    uint32_t user_stack = 0x800000; // 適当な空き領域
+    enter_user_mode((uint32_t)user_main, user_stack);
     current = scheduler_next();
     switch_to(0, current->tf);
     while (1) {
