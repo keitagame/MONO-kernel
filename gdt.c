@@ -1,7 +1,7 @@
 // gdt.c
 #include "gdt.h"
 
-static struct gdt_entry gdt[5];   // ★ 3 → 5 に増やす
+static struct gdt_entry gdt[6];   // ★ 3 → 5 に増やす
 static struct gdt_ptr   gdtp;
 
 static void gdt_set_entry(int idx, uint32_t base, uint32_t limit,

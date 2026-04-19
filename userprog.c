@@ -1,3 +1,4 @@
+//#include "sys.h"
 // userprog.c (ユーザ空間にリンクされる)
 static inline int write(int fd, const char *buf, int len) {
     int ret;
@@ -15,7 +16,11 @@ static inline void exit(int code) {
 
 void user_main() {
     while (1) {
-        // 何もしない or 適当にループ
+        write(1, "Hello from user mode!\n", 23);
+        //write("Hello from user mode!\n");
+    
+
+
     }
     //const char msg[] = "Hello from user mode!\n";
     //write(1, msg, sizeof(msg)-1);

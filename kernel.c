@@ -7,6 +7,8 @@
 #include "process.h"
 #include "pmm.h"
 #include "timer.h"
+#include "tss.h"
+//#include "usermode.h"
 
 #include "sys.h"
 static inline void outb(uint16_t port, uint8_t val)
@@ -87,6 +89,8 @@ void kernel_main(uint32_t multiboot_magic, uint32_t multiboot_info)
     //asm volatile("sti");
     //process_create(task1);
     //process_create(task2);
+    tss_init();
+    tss_set_kernel_stack(0x00800000);
     serial_write_string("Kernel OK\n");
     uint32_t user_stack = 0x800000; // 適当な空き領域
     enter_user_mode((uint32_t)user_main, user_stack);

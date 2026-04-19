@@ -24,10 +24,11 @@ void tss_set_kernel_stack(uint32_t stack) {
 }
 
 void tss_init() {
+    serial_write_string("tss_init: begin\n");
     tss.ss0 = 0x10; // kernel data
     tss.esp0 = 0;
     uint32_t base  = (uint32_t)&tss;
-    uint32_t limit = sizeof(tss);
+    uint32_t limit = sizeof(tss) -1;
     gdt_set_tss(5, base, limit);
     asm volatile("ltr %%ax" :: "a"(0x28)); // TSS selector
 }
